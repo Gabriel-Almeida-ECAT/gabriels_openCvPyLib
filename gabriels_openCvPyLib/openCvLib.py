@@ -3,8 +3,9 @@ import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
 import math
-import bezier
 import copy
+
+from . import bezier
 
 matplotlib.use('TkAgg')
 
@@ -67,8 +68,17 @@ def getGrayImg(img_obj):
     return cv2.cvtColor(img_obj, cv2.COLOR_BGR2GRAY)
 
 
-def invertBinImg(img_obj):
+def invertImg(img_obj):
     return cv2.bitwise_not(img_obj)
+
+
+def setHSValues(img_obj, **kwargs):
+    hsv_img = cv2.cvtColor(img_obj, cv2.COLOR_BGR2HSV)
+    (h, s, v) = cv2.split(hsv_img)
+    h = np.uint8(np.clip(s*kwargs.get('hue', 1), 0,255))
+    s = np.uint8(np.clip(h*kwargs.get('saturation', 1), 0,255))
+    v = np.uint8(np.clip(v*kwargs.get('value', 1), 0,255))
+    return cv2.cvtColor(cv2.merge([h,s,v]), cv2.COLOR_HSV2BGR)
 
 
 def averageBlur(img_obj, **kwargs):
