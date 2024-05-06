@@ -81,6 +81,38 @@ def setHSValues(img_obj, **kwargs):
     return cv2.cvtColor(cv2.merge([h,s,v]), cv2.COLOR_HSV2BGR)
 
 
+def zoomImg(img_obj, interval_x, interval_y):
+    zoomed_img = img_obj[interval_x[0] : interval_x[1] , interval_y[0] : interval_y[1]]
+    #imshow(zoomed_img)
+    return zoomed_img
+
+
+def rgb2yiq(rgb):
+    y = rgb @ np.array([[0.30], [0.59], [0.11]])
+
+    rby = rgb[:, :, (0, 2)] - y # In this case, (0, 2) indicates that you want to select the first and third channels (0-indexed) from the last dimension of the rgb array.
+    i = np.sum(rby * np.array([[[0.74, -0.27]]]), axis=-1)
+    q = np.sum(rby * np.array([[[0.48, 0.41]]]), axis=-1)
+
+    yiq = np.dstack((y.squeeze(), i, q))
+    return yiq
+
+
+def bgr2yiq(bgr):
+    rgb = np.float32(cv2.cvtColor(bgr, cv2.COLOR_BGR2RGB))
+    yiq = rgb2yiq(rgb)
+
+    return yiq
+
+
+def yiq2rgb(yiq):
+    r = yiq @ np.array([1.0, 0.9468822170900693, 0.6235565819861433])
+    g = yiq @ np.array([1.0, -0.27478764629897834, -0.6356910791873801])
+    b = yiq @ np.array([1.0, -1.1085450346420322, 1.7090069284064666])
+    rgb = np.clip(np.dstack((r, g, b)), 0, 255)
+    return np.uint8(rgb)
+
+
 def averageBlur(img_obj, **kwargs):
     kernel_size = kwargs.get("kernel_size", (5,5))
     return cv2.blur(img_obj, kernel_size)
