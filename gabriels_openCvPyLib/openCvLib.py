@@ -47,7 +47,8 @@ def showImages(imgs_list, titles_list=None, **kwargs):
             plt.imshow(rgb_img)
         if titles_list != None:
             plt.title(titles_list[ind-1])
-        plt.axis('off')
+        if not kwargs.get('axis', False):
+          plt.axis('off')
 
     plt.tight_layout()
     plt.show()
@@ -66,6 +67,10 @@ def addImagesProp(img_obj1, img_obj2, **kwargs):
 
 def getGrayImg(img_obj):
     return cv2.cvtColor(img_obj, cv2.COLOR_BGR2GRAY)
+
+
+def getRgbImg(img_obj):
+    return cv2.cvtColor(img_obj, cv2.COLOR_BGR2RGB)
 
 
 def invertImg(img_obj):
