@@ -65,11 +65,11 @@ def addImagesProp(img_obj1, img_obj2, **kwargs):
     return cv2.addWeighted(img_obj1, w1, img_obj2, w2, 0)
 
 
-def getGrayImg(img_obj):
+def bgr2gray(img_obj):
     return cv2.cvtColor(img_obj, cv2.COLOR_BGR2GRAY)
 
 
-def getRgbImg(img_obj):
+def bgr2rgb(img_obj):
     return cv2.cvtColor(img_obj, cv2.COLOR_BGR2RGB)
 
 
