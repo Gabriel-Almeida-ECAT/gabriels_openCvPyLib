@@ -88,8 +88,26 @@ def setHSValues(img_obj, **kwargs):
 
 def zoomImg(img_obj, interval_x, interval_y):
     zoomed_img = img_obj[interval_x[0] : interval_x[1] , interval_y[0] : interval_y[1]]
-    #imshow(zoomed_img)
     return zoomed_img
+
+
+def getCenteredAspectRatioCrop(img_obj: np.uint8, ratio: float):
+    width, height, _ = img_obj.shape
+    if width >= height:
+        half_new_width: float = (1/2)*height*ratio
+        return img_obj[int((width/2) - half_new_width):int((width/2) + half_new_width), :]
+    elif width < height:
+        half_new_height: float = 2*width*ratio
+        return img_obj[:, int((height/2) - half_new_height):int((height/2) + half_new_height)]
+
+
+def rotateImgAroundPoint(img_obj, deg_angle: float, point: tuple[int]):
+    rot_mat: cv2.typing.MatLike = cv2.getRotationMatrix2D(point, deg_angle, 1.0)
+    return cv2.warpAffine(img_obj, rot_mat, img_obj.shape[1::-1], flags=cv2.INTER_LINEAR)
+    
+ 
+def transposeImg(img_obj):
+    return np.transpose(img_obj, (1, 0, 2))
 
 
 def rgb2yiq(rgb):
